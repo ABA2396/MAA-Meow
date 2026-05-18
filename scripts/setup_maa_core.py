@@ -8,8 +8,10 @@ deploy resources to assets and shared libraries to jniLibs.
 usage:
     python scripts/setup_maa_core.py                    # download latest release and deploy
     python scripts/setup_maa_core.py --tag v6.3.0       # download specific tag
-    python scripts/setup_maa_core.py --clean             # clean target dirs before deploy
     python scripts/setup_maa_core.py --skip-download     # deploy from cache only
+
+Note: target directories (assets/MaaSync/MaaResource and jniLibs/<abi>/<MAA *.so>)
+are always cleaned before deploy to avoid stale files from previous versions.
 """
 
 import argparse
@@ -126,17 +128,16 @@ def find_android_assets(assets: list) -> dict:
     return result
 
 
-def extract_and_deploy(tarball: Path, abi: str, project_root: Path, clean: bool):
+def extract_and_deploy(tarball: Path, abi: str, project_root: Path):
     assets_dir = project_root / ASSETS_RESOURCE_DIR
     jnilib_dir = project_root / JNILIBS_DIR / abi
 
-    if clean:
-        if jnilib_dir.exists():
-            # Only delete MAA-related .so files, keep libjnidispatch.so etc.
-            for f in jnilib_dir.iterdir():
-                if f.suffix == ".so" and f.name != "libjnidispatch.so":
-                    f.unlink()
-                    print(f"    [DELETE] {abi}/{f.name}")
+    if jnilib_dir.exists():
+        # Only delete MAA-related .so files, keep libjnidispatch.so etc.
+        for f in jnilib_dir.iterdir():
+            if f.suffix == ".so" and f.name != "libjnidispatch.so":
+                f.unlink()
+                print(f"    [DELETE] {abi}/{f.name}")
 
     jnilib_dir.mkdir(parents=True, exist_ok=True)
 
@@ -189,7 +190,8 @@ def extract_and_deploy(tarball: Path, abi: str, project_root: Path, clean: bool)
 def main():
     parser = argparse.ArgumentParser(description="Download and deploy prebuilt MAA Core artifacts")
     parser.add_argument("--tag", "-t", help="Specify release tag (default: latest)")
-    parser.add_argument("--clean", "-c", action="store_true", help="Clean target dirs before deploy")
+    parser.add_argument("--clean", "-c", action="store_true",
+                        help="Deprecated: target dirs are always cleaned before deploy (kept for compatibility)")
     parser.add_argument("--skip-download", "-s", action="store_true", help="Skip download, use cache")
     parser.add_argument("--abi", choices=["arm64-v8a", "x86_64", "all"], default="all",
                         help="Process only specified ABI (default: all)")
@@ -202,12 +204,11 @@ def main():
     print("==> MAA Core Download & Deploy")
     print("=" * 55)
 
-    # Clean assets resource dir
-    if args.clean:
-        assets_dir = project_root / ASSETS_RESOURCE_DIR
-        if assets_dir.exists():
-            print(f"[DELETE] Cleaning resource dir: {assets_dir}")
-            shutil.rmtree(assets_dir)
+    # Always clean assets resource dir to avoid stale files from previous versions
+    assets_dir = project_root / ASSETS_RESOURCE_DIR
+    if assets_dir.exists():
+        print(f"[DELETE] Cleaning resource dir: {assets_dir}")
+        shutil.rmtree(assets_dir)
 
     target_abis = list(ABI_MAP.values()) if args.abi == "all" else [args.abi]
 
@@ -243,7 +244,7 @@ def main():
     for tarball in sorted(cache_dir.glob("*.tar.gz")):
         for keyword, abi in ABI_MAP.items():
             if keyword in tarball.name and abi in target_abis:
-                extract_and_deploy(tarball, abi, project_root, args.clean)
+                extract_and_deploy(tarball, abi, project_root)
                 resource_deployed = True
 
     if not resource_deployed:
