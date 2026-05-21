@@ -69,7 +69,6 @@ object VirtualDisplayManager {
      */
     fun start(): Int {
         if (state.get() == STATE_HOT) {
-            NativeBridgeLib.invalidateFrameBuffer()
             return displayId.get()
         }
         if (!state.compareAndSet(STATE_COLD, STATE_HOT)) {

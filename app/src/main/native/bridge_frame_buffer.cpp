@@ -236,10 +236,6 @@ void ReleaseFrameBuffers() {
     g_frame_count.store(0, std::memory_order_release);
 }
 
-void InvalidateFrameBuffer() {
-    g_read_buffer.store(nullptr, std::memory_order_release);
-}
-
 bool WriteHardwareBufferToFrame(AHardwareBuffer *buffer) {
     if (!buffer || !g_frame_buffers_initialized.load(std::memory_order_acquire)) {
         return false;
