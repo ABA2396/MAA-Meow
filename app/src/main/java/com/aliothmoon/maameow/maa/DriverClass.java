@@ -36,6 +36,7 @@ public final class DriverClass {
         int elapsed = 0;
         while (NativeBridgeLib.getFrameCount() <= baseline && elapsed < FRAME_WAIT_TIMEOUT_MS) {
             try {
+                Ln.i("DriverClass: awaitFirstFrame");
                 Thread.sleep(FRAME_WAIT_INTERVAL_MS);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

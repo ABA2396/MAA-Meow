@@ -36,13 +36,20 @@ static jlong nativeGetFrameCount(JNIEnv *env, jclass clazz) {
     return static_cast<jlong>(GetFrameCount());
 }
 
+static void nativeInvalidateFrameBuffer(JNIEnv *env, jclass clazz) {
+    (void) env;
+    (void) clazz;
+    InvalidateFrameBuffer();
+}
+
 static JNINativeMethod gMethods[] = {
-        {"ping",                  "()Ljava/lang/String;",        reinterpret_cast<void *>(ping)},
-        {"setupNativeCapturer",   "(II)Landroid/view/Surface;",  reinterpret_cast<void *>(nativeSetupNativeCapturer)},
-        {"releaseNativeCapturer", "()V",                         reinterpret_cast<void *>(nativeReleaseNativeCapturer)},
-        {"setPreviewSurface",     "(Ljava/lang/Object;)V",       reinterpret_cast<void *>(nativeSetPreviewSurface)},
-        {"getFrameBufferBitmap",  "()Landroid/graphics/Bitmap;", reinterpret_cast<void *>(nativeGetFrameBufferBitmap)},
-        {"getFrameCount",         "()J",                         reinterpret_cast<void *>(nativeGetFrameCount)},
+        {"ping",                   "()Ljava/lang/String;",        reinterpret_cast<void *>(ping)},
+        {"setupNativeCapturer",    "(II)Landroid/view/Surface;",  reinterpret_cast<void *>(nativeSetupNativeCapturer)},
+        {"releaseNativeCapturer",  "()V",                         reinterpret_cast<void *>(nativeReleaseNativeCapturer)},
+        {"setPreviewSurface",      "(Ljava/lang/Object;)V",       reinterpret_cast<void *>(nativeSetPreviewSurface)},
+        {"getFrameBufferBitmap",   "()Landroid/graphics/Bitmap;", reinterpret_cast<void *>(nativeGetFrameBufferBitmap)},
+        {"getFrameCount",          "()J",                         reinterpret_cast<void *>(nativeGetFrameCount)},
+        {"invalidateFrameBuffer",  "()V",                         reinterpret_cast<void *>(nativeInvalidateFrameBuffer)},
 };
 
 static constexpr char kNativeBridgeClass[] = "com/aliothmoon/maameow/bridge/NativeBridgeLib";

@@ -23,6 +23,7 @@ typedef struct {
 
 void InitFrameBuffers(int width, int height);
 void ReleaseFrameBuffers();
+void InvalidateFrameBuffer();
 bool WriteHardwareBufferToFrame(AHardwareBuffer *buffer);
 jobject CreateFrameBufferBitmap(JNIEnv *env);
 int64_t GetFrameCount();

@@ -39,4 +39,7 @@ public class NativeBridgeLib {
     @FastNative
     public static native long getFrameCount();
 
+    @FastNative
+    public static native void invalidateFrameBuffer();
+
 }
