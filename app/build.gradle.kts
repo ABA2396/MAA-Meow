@@ -28,7 +28,14 @@ val gitVersionName: String by lazy {
         commandLine("git", "describe", "--tags", "--always")
         isIgnoreExitValue = true
     }.standardOutput.asText.get().trim()
-    desc.removePrefix("v").ifEmpty { "0.0.0-dev" }
+    val match = Regex("""^v?(\d+)\.(\d+)\.(\d+)(?:-(\d+)-g[0-9a-f]+)?$""").matchEntire(desc)
+    if (match != null) {
+        val (major, minor, patch, distance) = match.destructured
+        if (distance.isEmpty()) "$major.$minor.$patch"
+        else "$major.$minor.${patch.toInt() + 1}-beta.$distance"
+    } else {
+        desc.removePrefix("v").ifEmpty { "0.0.0-dev" }
+    }
 }
 
 android {
