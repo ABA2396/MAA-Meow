@@ -21,7 +21,8 @@ class BarkProvider(
         val barkServer = settings.barkServer.takeIf { it.isNotEmpty() } ?: return false
         val sendKey = settings.barkSendKey.takeIf { it.isNotEmpty() } ?: return false
 
-        val url = URI.create(barkServer).resolve("/push").toString()
+        val normalizedBase = barkServer.trimEnd('/') + "/"
+        val url = URI.create(normalizedBase).resolve("push").toString()
         val body = JsonUtils.common.encodeToString(
             BarkRequest(
                 title = title,

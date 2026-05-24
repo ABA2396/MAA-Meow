@@ -17,14 +17,14 @@ class GotifyProvider(
 
     override suspend fun send(title: String, content: String): Boolean {
         val settings = settingsManager.settings.first()
-        val server = settings.gotifyServer.takeIf { it.isNotBlank() }?.trim() ?: return false
+        val server = (settings.gotifyServer.takeIf { it.isNotBlank() }?.trim()?.trimEnd('/') ?: return false) + "/"
         val token = settings.gotifyToken.takeIf { it.isNotBlank() } ?: return false
         val baseUri = runCatching { URI.create(server) }.getOrNull() ?: return false
         if (baseUri.scheme !in setOf("http", "https")) {
             return false
         }
 
-        val url = baseUri.resolve("/message").toString()
+        val url = baseUri.resolve("message").toString()
         val body = JsonUtils.common.encodeToString(
             GotifyRequest(
                 title = title,
