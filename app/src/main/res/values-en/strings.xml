@@ -1263,4 +1263,7 @@
     <string name="announcement_confirm_message">This notice won\'t appear again after confirmation. Please make sure you have read it fully.</string>
     <string name="announcement_confirm_ok">Got it, don\'t show again</string>
     <string name="announcement_confirm_back">Back to read again</string>
+    <string name="announcement_dont_show_again">Don\'t show again until next update</string>
+    <string name="announcement_dont_show_again_hint">Scroll to the bottom and stay for %1$d seconds to enable</string>
+    <string name="announcement_confirm">Confirm</string>
 </resources>

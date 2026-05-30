@@ -314,9 +314,11 @@ fun AppNavigation(
             AnnouncementDialog(
                 imageAssetPath = remember(language) { AnnouncementConfig.imageAssetPath(language) },
                 markdown = announcementMarkdown,
-                onConfirmed = {
-                    coroutineScope.launch {
-                        appSettings.setAnnouncementReadVersion(AnnouncementConfig.CURRENT_VERSION)
+                onDismiss = { dontShowAgain ->
+                    if (dontShowAgain) {
+                        coroutineScope.launch {
+                            appSettings.setAnnouncementReadVersion(AnnouncementConfig.CURRENT_VERSION)
+                        }
                     }
                 },
             )
