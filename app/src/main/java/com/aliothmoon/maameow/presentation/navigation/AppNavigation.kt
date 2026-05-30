@@ -63,6 +63,7 @@ fun AppNavigation(
     val context = LocalContext.current
 
     var isFullscreen by remember { mutableStateOf(false) }
+    var forceShowAnnouncement by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
     // 执行模式状态 - 用于底部导航拦截
@@ -210,7 +211,10 @@ fun AppNavigation(
                             slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(350))
                         }
                     ) {
-                        SettingsView(navController = navController)
+                        SettingsView(
+                            navController = navController,
+                            onViewAnnouncement = { forceShowAnnouncement = true },
+                        )
                     }
 
                     composable(
@@ -302,9 +306,11 @@ fun AppNavigation(
             )
         }
 
-        // 长期公告弹窗：每次公告版本变更后首次启动自动弹出
-        val announcementMarkdown = remember(announcementReadVersion, language) {
-            if (announcementReadVersion != AnnouncementConfig.CURRENT_VERSION) {
+        // 长期公告弹窗：每次公告版本变更后首次启动自动弹出，或从设置中手动打开
+        val showAnnouncement = forceShowAnnouncement ||
+            announcementReadVersion != AnnouncementConfig.CURRENT_VERSION
+        val announcementMarkdown = remember(showAnnouncement, language) {
+            if (showAnnouncement) {
                 AnnouncementConfig.loadContent(context, language)
             } else {
                 null
@@ -315,6 +321,7 @@ fun AppNavigation(
                 imageAssetPath = remember(language) { AnnouncementConfig.imageAssetPath(language) },
                 markdown = announcementMarkdown,
                 onDismiss = { dontShowAgain ->
+                    forceShowAnnouncement = false
                     if (dontShowAgain) {
                         coroutineScope.launch {
                             appSettings.setAnnouncementReadVersion(AnnouncementConfig.CURRENT_VERSION)

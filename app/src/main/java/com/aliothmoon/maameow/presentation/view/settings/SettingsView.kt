@@ -71,6 +71,7 @@ import org.koin.compose.koinInject
 @Composable
 fun SettingsView(
     navController: NavController,
+    onViewAnnouncement: () -> Unit = {},
     viewModel: SettingsViewModel = koinViewModel(),
     resourceInitService: ResourceInitService = koinInject(),
     logExportService: LogExportService = koinInject()
@@ -405,6 +406,13 @@ fun SettingsView(
                         Misc.openUriSafely(context, "https://qm.qq.com/q/j4CFbeDQXu")
                     }
                     SettingsDivider(contentColor)
+                    SettingClickItem(
+                        title = stringResource(R.string.settings_about_announcement),
+                        contentColor = contentColor
+                    ) {
+                        onViewAnnouncement()
+                    }
+                    SettingsDivider(contentColor)
                     Text(
                         text = stringResource(R.string.settings_about_star),
                         style = MaterialTheme.typography.bodyMedium,
@@ -485,7 +493,7 @@ private fun SettingThemeModeItem(
 @Composable
 private fun SettingClickItem(
     title: String,
-    description: String,
+    description: String = "",
     contentColor: Color,
     onClick: () -> Unit
 ) {
