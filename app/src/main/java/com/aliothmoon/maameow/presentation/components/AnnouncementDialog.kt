@@ -3,6 +3,7 @@ package com.aliothmoon.maameow.presentation.components
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -182,13 +184,20 @@ fun AnnouncementDialog(
 
                 // "不再显示"勾选框
                 Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .toggleable(
+                            value = dontShowAgain,
+                            enabled = canCheck,
+                            role = Role.Checkbox,
+                            onValueChange = { dontShowAgain = it },
+                        ),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Checkbox(
                         checked = dontShowAgain,
-                        onCheckedChange = { dontShowAgain = it },
-                        enabled = canCheck,
+                        onCheckedChange = null,
                     )
                     Text(
                         text = stringResource(R.string.announcement_dont_show_again),
