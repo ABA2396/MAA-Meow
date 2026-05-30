@@ -324,7 +324,6 @@ fun AppNavigation(
                 onDismiss = { dontShowAgain ->
                     forceShowAnnouncement = false
                     if (dontShowAgain) {
-                        announcementDismissedOnce = false
                         coroutineScope.launch {
                             appSettings.setAnnouncementReadVersion(AnnouncementConfig.CURRENT_VERSION)
                         }
