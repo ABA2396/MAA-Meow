@@ -48,6 +48,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.runtime.snapshotFlow
 import com.aliothmoon.maameow.R
+import kotlinx.coroutines.flow.distinctUntilChanged
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
 
