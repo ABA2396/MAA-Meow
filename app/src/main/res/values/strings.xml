@@ -1317,6 +1317,7 @@
     <string name="announcement_confirm_ok">确认，不再提示</string>
     <string name="announcement_confirm_back">返回继续阅读</string>
     <string name="announcement_dont_show_again">下次公告更新前不再显示</string>
-    <string name="announcement_dont_show_again_hint">需滑动至底部并停留 %1$d 秒后可勾选</string>
+    <string name="announcement_dont_show_again_hint">请阅读完公告并停留 %1$d 秒后可勾选</string>
+    <string name="announcement_scroll_to_bottom_hint">请阅读完公告内容</string>
     <string name="announcement_confirm">确认</string>
 </resources>

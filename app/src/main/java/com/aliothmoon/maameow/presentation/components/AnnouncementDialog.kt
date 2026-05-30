@@ -67,11 +67,12 @@ fun AnnouncementDialog(
 
     val scrollState = rememberScrollState()
 
-    // 检测是否滚动到底部
-    LaunchedEffect(scrollState.maxValue) {
-        snapshotFlow { scrollState.value }
-            .collect { value ->
-                if (scrollState.maxValue > 0 && value >= scrollState.maxValue) {
+    // 检测是否滚动到底部（内容不足一屏时 maxValue==0 视为已到底）
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.value >= scrollState.maxValue }
+            .distinctUntilChanged()
+            .collect { atBottom ->
+                if (atBottom && scrollState.maxValue >= 0) {
                     scrolledToBottom = true
                 }
             }
@@ -79,7 +80,7 @@ fun AnnouncementDialog(
 
     // 停留计时器
     LaunchedEffect(Unit) {
-        while (true) {
+        repeat(STAY_SECONDS_REQUIRED) {
             delay(1000)
             elapsedSeconds++
         }
@@ -202,16 +203,27 @@ fun AnnouncementDialog(
 
                 // 未满足条件时显示提示
                 if (!canCheck) {
-                    val remaining = maxOf(0, STAY_SECONDS_REQUIRED - elapsedSeconds)
-                    Text(
-                        text = stringResource(
-                            R.string.announcement_dont_show_again_hint,
-                            remaining,
-                        ),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(start = 48.dp),
-                    )
+                    if (!scrolledToBottom) {
+                        // 尚未滚动到底部（无论 elapsedSeconds 是多少）
+                        Text(
+                            text = stringResource(R.string.announcement_scroll_to_bottom_hint),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 48.dp),
+                        )
+                    } else {
+                        // 已滚动到底部，但时间未到
+                        val remaining = maxOf(0, STAY_SECONDS_REQUIRED - elapsedSeconds)
+                        Text(
+                            text = stringResource(
+                                R.string.announcement_dont_show_again_hint,
+                                remaining,
+                            ),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 48.dp),
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

@@ -64,6 +64,7 @@ fun AppNavigation(
 
     var isFullscreen by remember { mutableStateOf(false) }
     var forceShowAnnouncement by remember { mutableStateOf(false) }
+    var announcementDismissedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
     // 执行模式状态 - 用于底部导航拦截
@@ -307,8 +308,8 @@ fun AppNavigation(
         }
 
         // 长期公告弹窗：每次公告版本变更后首次启动自动弹出，或从设置中手动打开
-        val showAnnouncement = forceShowAnnouncement ||
-            announcementReadVersion != AnnouncementConfig.CURRENT_VERSION
+        val needsToShow = announcementReadVersion != AnnouncementConfig.CURRENT_VERSION
+        val showAnnouncement = forceShowAnnouncement || (needsToShow && !announcementDismissedOnce)
         val announcementMarkdown = remember(showAnnouncement, language) {
             if (showAnnouncement) {
                 AnnouncementConfig.loadContent(context, language)
@@ -323,9 +324,12 @@ fun AppNavigation(
                 onDismiss = { dontShowAgain ->
                     forceShowAnnouncement = false
                     if (dontShowAgain) {
+                        announcementDismissedOnce = false
                         coroutineScope.launch {
                             appSettings.setAnnouncementReadVersion(AnnouncementConfig.CURRENT_VERSION)
                         }
+                    } else {
+                        announcementDismissedOnce = true
                     }
                 },
             )
