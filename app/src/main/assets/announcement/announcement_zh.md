@@ -11,7 +11,7 @@
 请优先通过以下 **官方渠道** 获取 MaaMeow：
 
 - **GitHub Release**：[github.com/Aliothmoon/MAA-Meow](https://github.com/Aliothmoon/MAA-Meow/releases)
-- **QQ 交流群**：群内公告/文件
+- **QQ 官方群**：群内公告/文件（可通过「设置 → 关于 → 问题反馈 QQ 群」加群）
 - **Mirror 酱**：官方支持的镜像加速渠道
 
 **请避免从网盘、论坛帖子、不明链接等非官方途径下载。**

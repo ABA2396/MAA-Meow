@@ -11,7 +11,7 @@ Do not participate in spreading insider information. It is strictly prohibited t
 Please download MaaMeow exclusively from **official channels**:
 
 - **GitHub Release**: [github.com/Aliothmoon/MAA-Meow](https://github.com/Aliothmoon/MAA-Meow/releases)
-- **QQ Group**: announcements and files within the official group
+- **Official QQ Group**: announcements and files within the group (join via Settings → About → Feedback QQ Group)
 - **MirrorChyan**: the officially supported mirror download service
 
 **Avoid downloading from network drives, forum posts, or any unofficial sources.**
